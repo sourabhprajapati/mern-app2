@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import "./Navbar.css"
+
 const Navbar = () => {
   return (
     <div>
@@ -13,11 +14,10 @@ const Navbar = () => {
                 <ul>
                     <li><NavLink to='/'>Home</NavLink></li>
                     <li><NavLink to='/about'>About</NavLink></li>
-                    <li><NavLink to='/contact'>Contact</NavLink></li>
-                    <li><NavLink to='/Service'>Service</NavLink></li>
-                    <li><NavLink to='/Register'>Register</NavLink></li>
-                    <li><NavLink to='/Login'>Login</NavLink></li>
-
+                    <li><NavLink to='/contact'>Contact</NavLink></li>  {/* Fixed: lowercase */}
+                    <li><NavLink to='/service'>Service</NavLink></li>  {/* Fixed: lowercase */}
+                    <li><NavLink to='/register'>Register</NavLink></li>  {/* Fixed: lowercase */}
+                    <li><NavLink to='/login'>Login</NavLink></li>  {/* Fixed: lowercase */}
                 </ul>
             </nav>
         </div>

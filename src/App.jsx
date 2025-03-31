@@ -7,19 +7,19 @@ import Service from "./pages/Service";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
+
 const App = () => {
   return (
     <div>
       <BrowserRouter>
-      <Navbar/>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/Contact " element={<Contact />} />
-          <Route path="/Service" element={<Service />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/Login" element={<Login />} />
-
+          <Route path="/contact" element={<Contact />} />  {/* Fixed: removed space */}
+          <Route path="/service" element={<Service />} />  {/* Fixed: lowercase to match NavLink */}
+          <Route path="/register" element={<Register />} />  {/* Fixed: lowercase to match NavLink */}
+          <Route path="/login" element={<Login />} />  {/* Fixed: lowercase to match NavLink */}
         </Routes>
       </BrowserRouter>
     </div>
