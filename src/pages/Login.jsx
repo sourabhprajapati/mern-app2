@@ -1,12 +1,17 @@
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import React from 'react';
+import loginImage from '/images/login.png';
+import { useAuth } from '../store/auth';
+
 const Login = () => {
   const [user, setUser] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { storetokenInLS }=useAuth();
 
   // let handle the input field value
   const handleInput = (e) => {
@@ -18,10 +23,42 @@ const Login = () => {
       [name]: value,
     });
   };
-  const handleSubmit=(e)=>{
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    alert(user)
-  }
+    // Add basic validation
+    if (!user.email || !user.password) {
+        alert("Please fill in all fields");
+        return;
+    }
+    
+    try {
+        const response = await fetch(`http://localhost:5000/api/auth/login`, {
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user)
+        });
+        
+        const responseData = await response.json();
+        
+        if (response.ok) {
+            storetokenInLS(responseData.token)
+            alert("Login successful");
+            setUser({ email: "", password: "" });
+
+            navigate("/")
+            console.log(responseData);
+        } else {
+            alert(responseData.msg || "Login failed");
+            console.log("Error details:", responseData);
+        }
+    } catch (error) {
+        console.error("Network error:", error);
+        alert("Network error occurred");
+    }
+};
 
   return (
     <>
@@ -31,7 +68,7 @@ const Login = () => {
             <div className="container grid grid-two-cols">
               <div className="registration-image reg-img">
                 <img
-                  src="/images/login.png"
+                  src={loginImage}
                   alt="let's fill the login form"
                   width="400"
                   height="500"
@@ -45,7 +82,7 @@ const Login = () => {
                   <div>
                     <label htmlFor="email">email</label>
                     <input
-                      type="text"
+                      type="email"
                       name="email"
                       value={user.email}
                       onChange={handleInput}

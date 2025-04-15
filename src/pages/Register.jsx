@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-
+import registerImage from '/images/register.png';
+import { useAuth } from '../store/auth';
 const Register = () => {
 
   const[user,setUser]=useState({
@@ -9,6 +10,7 @@ const Register = () => {
     password:"",
 
   });
+  const {storetokenInLS}=useAuth();
   const handleInput=(e)=>{
     let name=e.target.name;
     let value=e.target.value;
@@ -17,9 +19,31 @@ const Register = () => {
       [name]:value
     })
   }
-  const handleSubmit=(e)=>{
+  const handleSubmit=async (e)=>{
     e.preventDefault();
-    alert(user)
+    try {
+      const response=await fetch(`http://localhost:5000/api/auth/register`,{
+        method:"POST",
+        credentials: 'include', // For cookies/auth headers
+
+        headers:{
+          'Content-Type':'application/json',
+        },
+        body:JSON.stringify(user)
+      })
+      if (response.ok) {
+        const responseData = await response.json();
+        storetokenInLS(responseData.token);
+        alert("registration successful");
+        setUser({ username: "", email: "", phone: "", password: "" });
+        console.log(responseData);
+      } else {
+        console.log("error inside response ", "error");
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    
   }
 
   return (
@@ -29,7 +53,7 @@ const Register = () => {
           <div className="section-registration">
            <div className='container grid grid-two-cols'>
             <div className='registration-image'>
-                 <img src="/images/register.png" alt="a girl trying to fill register" width="500" height="500" />
+                 <img src={registerImage} alt="a girl trying to fill register" width="500" height="500" />
             </div>
                 {/* let tacle register for */}
                 <div className='registration-form'>
