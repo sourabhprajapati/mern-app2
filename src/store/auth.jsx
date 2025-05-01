@@ -1,57 +1,86 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-export const AuthContext=createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-
     const [token, setToken] = useState(localStorage.getItem('token') || '');
     const [user, setUser] = useState("");
-    const [isLoggedIn, setIsLoggedIn] = useState(false);   
-    const storetokenInLS=(serverToken)=>{
-        localStorage.setItem("token",serverToken);
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));   
+    const [services, setServices] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    const storetokenInLS = (serverToken) => {
+        localStorage.setItem("token", serverToken);
         setToken(serverToken);
         setIsLoggedIn(true);
+    };
 
-    }
-    
-   
-    console.log("isLoggedin ", isLoggedIn);
-    const LogoutUser=()=>{
-        
-         localStorage.removeItem('token');
-         setToken('');
-         setIsLoggedIn(false);
-    }
-    const userAuthentication=async()=>{
+    const LogoutUser = () => {
+        localStorage.removeItem('token');
+        setToken('');
+        setIsLoggedIn(false);
+    };
+
+    const userAuthentication = async () => {
         try {
-            const response= await fetch("http://localhost:5000/api/auth/user",{
-                method:"GET",
-                headers:{
-                    Authorization:`Bearer ${token}`
+            const response = await fetch("http://localhost:5000/api/auth/user", {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
-            })
-            if(response.ok){
-                const data=await response.json();
-                console.log('user data',data);
-                setUser(data.userData)
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('user data', data);
+                setUser(data.userData);
             }
         } catch (error) {
-            console.log("Error fetching user data",error)
+            console.log("Error fetching user data", error);
         }
-    }
+    };
 
-    useEffect(()=>{
-        userAuthentication();
-    })
-    return <AuthContext.Provider value={{storetokenInLS,LogoutUser,isLoggedIn,token,user}}>
-        {children}
-    </AuthContext.Provider>
-}
+    const getServiceData = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await fetch("http://localhost:5000/api/data/service", {
+                method: "GET",
+            });
+            if (response.ok) {
+                const services = await response.json();
+                console.log("Service data:", services); // Debug: Log API response
+                setServices(services.msg || []);
+            } else {
+                throw new Error("Failed to fetch services");
+            }
+        } catch (error) {
+            console.error("Error fetching services:", error);
+            setError(error.message);
+            setServices([]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getServiceData();
+        if (token) {
+            userAuthentication();
+        }
+    }, [token]);
+
+    return (
+        <AuthContext.Provider value={{ storetokenInLS, LogoutUser, isLoggedIn, token, user, services, isLoading, error }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
 
 export const useAuth = () => {
-    const authContextValue=useContext(AuthContext);
-    if(!authContextValue){
-        throw new Error("useAuth must be used within an AuthProvider")
+    const authContextValue = useContext(AuthContext);
+    if (!authContextValue) {
+        throw new Error("useAuth must be used within an AuthProvider");
     }
     return authContextValue;
-}
+};

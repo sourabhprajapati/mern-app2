@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import registerImage from '/images/register.png';
 import { useAuth } from '../store/auth';
-const Register = () => {
+import { useNavigate } from "react-router-dom";
 
+const Register = () => {
+const navigate = useNavigate();
   const[user,setUser]=useState({
     username:"",
     email:"",
@@ -31,14 +33,17 @@ const Register = () => {
         },
         body:JSON.stringify(user)
       })
+      const responseData = await response.json();
+      console.log(responseData);
       if (response.ok) {
-        const responseData = await response.json();
+       
         storetokenInLS(responseData.token);
         alert("registration successful");
         setUser({ username: "", email: "", phone: "", password: "" });
+        navigate("/")
         console.log(responseData);
       } else {
-        console.log("error inside response ", "error");
+       alert(responseData.extraDetails?responseData.extraDetails:responseData.message)
       }
     } catch (error) {
       console.log(error)

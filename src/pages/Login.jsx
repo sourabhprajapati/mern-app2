@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import React from 'react';
 import loginImage from '/images/login.png';
 import { useAuth } from '../store/auth';
+import {  toast } from 'react-toastify';
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -45,18 +46,18 @@ const Login = () => {
         
         if (response.ok) {
             storetokenInLS(responseData.token)
-            alert("Login successful");
+            toast.success("Login successful");
             setUser({ email: "", password: "" });
 
             navigate("/")
             console.log(responseData);
         } else {
-            alert(responseData.msg || "Login failed");
-            console.log("Error details:", responseData);
+          toast.error(responseData.msg)
+          console.log("Error details:", responseData);
         }
     } catch (error) {
         console.error("Network error:", error);
-        alert("Network error occurred");
+        toast.error ("Network error occurred");
     }
 };
 

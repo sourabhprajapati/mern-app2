@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import "./Contact.css"
 import { useAuth } from '../store/auth';
+const defaultContactFormData = {
+  username: "",
+  email: "",
+  message: "",
+};
 const Contact = () => {
   const [contact, setContact] = useState({
     username: "",
@@ -30,13 +35,31 @@ const Contact = () => {
   };
 
   // handle fomr getFormSubmissionInfo
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
-    console.log(contact);
+    try {
+      const response=await fetch("http://localhost:5000/api/form/contact",{
+        method:"POST",
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(contact)
+      })
+      if (response.ok) {
+        setContact(defaultContactFormData);
+        const responseData = await response.json();
+        alert("Message send successfully");
+        console.log(responseData);
+      } else {
+        // Handle API error here
+        console.error("API Error:", response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-//  Help me reach 1 Million subs 👉 https://youtube.com/thapatechnical
 
   return (
     <>
