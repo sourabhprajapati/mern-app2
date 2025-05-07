@@ -20,7 +20,7 @@ import React from "react";
                   <button className="btn">connect now</button>
                 </a>
                 <a href="/services">
-                  <button className="btn secondary-btn">learn more</button>
+                  <button className="btn secondary-btn" style={{color:"white"}}>learn more</button>
                 </a>
               </div>
             </div>
@@ -91,7 +91,7 @@ import React from "react";
                 <button className="btn">connect now</button>
               </a>
               <a href="/services">
-                <button className="btn secondary-btn">learn more</button>
+                <button className="btn secondary-btn" style={{color:"white"}}>learn more</button>
               </a>
             </div>
           </div>

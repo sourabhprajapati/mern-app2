@@ -12,7 +12,7 @@ const navigate = useNavigate();
     password:"",
 
   });
-  const {storetokenInLS}=useAuth();
+  const {storetokenInLS,API}=useAuth();
   const handleInput=(e)=>{
     let name=e.target.name;
     let value=e.target.value;
@@ -24,7 +24,7 @@ const navigate = useNavigate();
   const handleSubmit=async (e)=>{
     e.preventDefault();
     try {
-      const response=await fetch(`http://localhost:5000/api/auth/register`,{
+      const response=await fetch(`${API}/api/auth/register`,{
         method:"POST",
         credentials: 'include', // For cookies/auth headers
 

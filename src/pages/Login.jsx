@@ -12,7 +12,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
-  const { storetokenInLS }=useAuth();
+  const { storetokenInLS,API }=useAuth();
 
   // let handle the input field value
   const handleInput = (e) => {
@@ -33,7 +33,7 @@ const Login = () => {
     }
     
     try {
-        const response = await fetch(`http://localhost:5000/api/auth/login`, {
+        const response = await fetch(`${API}/api/auth/login`, {
             method: "POST",
             credentials: 'include',
             headers: {

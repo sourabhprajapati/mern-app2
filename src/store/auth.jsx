@@ -8,8 +8,11 @@ export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));   
     const [services, setServices] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const[issloading,setissloading]=useState(true)
     const [error, setError] = useState(null);
      const authorizationToken=`Bearer ${token}`;
+
+     const API =import.meta.env.VITE_API
     const storetokenInLS = (serverToken) => {
         localStorage.setItem("token", serverToken);
         setToken(serverToken);
@@ -24,7 +27,8 @@ export const AuthProvider = ({ children }) => {
 
     const userAuthentication = async () => {
         try {
-            const response = await fetch("http://localhost:5000/api/auth/user", {
+            setissloading(true)
+            const response = await fetch(`${API}/api/auth/user`, {
                 method: "GET",
                 headers: {
                     Authorization: authorizationToken
@@ -34,6 +38,9 @@ export const AuthProvider = ({ children }) => {
                 const data = await response.json();
                 console.log('user data', data);
                 setUser(data.userData);
+                setissloading(false)
+            }else{
+                setissloading(false)
             }
         } catch (error) {
             console.log("Error fetching user data", error);
@@ -44,7 +51,7 @@ export const AuthProvider = ({ children }) => {
         try {
             setIsLoading(true);
             setError(null);
-            const response = await fetch("http://localhost:5000/api/data/service", {
+            const response = await fetch(`${API}/api/data/service`, {
                 method: "GET",
             });
             if (response.ok) {
@@ -71,7 +78,7 @@ export const AuthProvider = ({ children }) => {
     }, [token]);
 
     return (
-        <AuthContext.Provider value={{ storetokenInLS, LogoutUser, isLoggedIn, token, user, services, isLoading, error,authorizationToken }}>
+        <AuthContext.Provider value={{ storetokenInLS, LogoutUser, isLoggedIn, token, user, services, isLoading, error,authorizationToken,issloading ,API}}>
             {children}
         </AuthContext.Provider>
     );

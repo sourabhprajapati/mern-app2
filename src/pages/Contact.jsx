@@ -13,7 +13,7 @@ const Contact = () => {
     message: "",
   });
   const[userData,setUserData]=useState(true)
-  const { user } = useAuth();
+  const { user ,API} = useAuth();
 
   if(userData && user){
     setContact({
@@ -39,7 +39,7 @@ const Contact = () => {
     e.preventDefault();
 
     try {
-      const response=await fetch("http://localhost:5000/api/form/contact",{
+      const response=await fetch(`${API}/api/form/contact`,{
         method:"POST",
         headers:{
           'Content-Type':'application/json'
@@ -77,7 +77,7 @@ const Contact = () => {
           <section className="section-form">
             <form onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="username">username</label>
+                <label htmlFor="username" style={{color:"white"}}>username</label>
                 <input
                   type="text"
                   name="username"
@@ -90,7 +90,7 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="email">email</label>
+                <label htmlFor="email"  style={{color:"white"}}>email</label>
                 <input
                   type="email"
                   name="email"
@@ -103,7 +103,7 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="message">message</label>
+                <label htmlFor="message"  style={{color:"white"}}>message</label>
                 <textarea
                   name="message"
                   id="message"

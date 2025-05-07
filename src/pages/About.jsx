@@ -39,7 +39,7 @@ const About = () => {
                 <NavLink to="/contact">
                   <button className="btn"> Connect Now</button>
                 </NavLink>
-                <button className="btn secondary-btn">learn more</button>
+                <button className="btn secondary-btn"  style={{color:"white"}}>learn more</button>
               </div>
             </div>
             <div className="hero-image">
